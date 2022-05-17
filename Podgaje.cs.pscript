@@ -1,0 +1,537 @@
+using System;
+using System.Data.SqlClient;
+using System.Collections.Generic;
+using Proficy.CIMPLICITY;
+
+public class Podgaje {
+	
+	public void Main() {
+			
+			SQL_execute();
+	}
+	
+	static void SQL_execute()
+	{
+    	string connectionString = null;
+        SqlConnection connection;
+        SqlCommand command;
+        string sql = null;
+        SqlDataReader dataReader;
+        connectionString = "Data Source=localhost;Initial Catalog=CIMPLICITY;Integrated Security=True;Connection Timeout=300";
+		
+		sql = @"truncate table CIMPLICITY.dbo.HIST;
+				INSERT into CIMPLICITY.dbo.HIST SELECT * from openquery(Historian, 'Select timestamp, tagname,value from ihrawdata where timestamp > now-10m and intervalmilliseconds=1S and rowcount = 20000')
+
+				declare @HZ int;
+				set @HZ = 1;
+				if @HZ = 1
+					begin
+						insert into CIMPLICITY.dbo.Tag_HZ (Timestamp, UnitID) values (GETDATE(), @hz);
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1COS.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [COS_MIN] = agregacja.minimalna, [COS_MAX] = agregacja.maksymalna, [COS_AVG] = agregacja.srednia from agregacja where [COS_MIN] is null;
+						
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1HKR.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [HKR_MIN] = agregacja.minimalna, [HKR_MAX] = agregacja.maksymalna, [HKR_AVG] = agregacja.srednia from agregacja where [HKR_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1I1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [I1_MIN] = agregacja.minimalna, [I1_MAX] = agregacja.maksymalna, [I1_AVG] = agregacja.srednia from agregacja where [I1_MIN] is null;		
+						
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1I2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [I2_MIN] = agregacja.minimalna, [I2_MAX] = agregacja.maksymalna, [I2_AVG] = agregacja.srednia from agregacja where [I2_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1I3.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [I3_MIN] = agregacja.minimalna, [I3_MAX] = agregacja.maksymalna, [I3_AVG] = agregacja.srednia from agregacja where [I3_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1K.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [K_MIN] = agregacja.minimalna, [K_MAX] = agregacja.maksymalna, [K_AVG] = agregacja.srednia from agregacja where [K_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1N.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [N_MIN] = agregacja.minimalna, [N_MAX] = agregacja.maksymalna, [N_AVG] = agregacja.srednia from agregacja where [N_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1P.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [P_MIN] = agregacja.minimalna, [P_MAX] = agregacja.maksymalna, [P_AVG] = agregacja.srednia from agregacja where [P_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1Q.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [Q_MIN] = agregacja.minimalna, [Q_MAX] = agregacja.maksymalna, [Q_AVG] = agregacja.srednia from agregacja where [Q_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1S.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [S_MIN] = agregacja.minimalna, [S_MAX] = agregacja.maksymalna, [S_AVG] = agregacja.srednia from agregacja where [S_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1SPAD.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [SPAD_MIN] = agregacja.minimalna, [SPAD_MAX] = agregacja.maksymalna, [SPAD_AVG] = agregacja.srednia from agregacja where [SPAD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TLNT1_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TLN_MIN] = agregacja.minimalna, [TLN_MAX] = agregacja.maksymalna, [TLN_AVG] = agregacja.srednia from agregacja where [TLN_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TLNT_OLEJ_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TOLN_MIN] = agregacja.minimalna, [TOLN_MAX] = agregacja.maksymalna, [TOLN_AVG] = agregacja.srednia from agregacja where [TOLN_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TLDT_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TTD_MIN] = agregacja.minimalna, [TTD_MAX] = agregacja.maksymalna, [TTD_AVG] = agregacja.srednia from agregacja where [TTD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TLGT_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TTG_MIN] = agregacja.minimalna, [TTG_MAX] = agregacja.maksymalna, [TTG_AVG] = agregacja.srednia from agregacja where [TTG_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TLDG_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TGD_MIN] = agregacja.minimalna, [TGD_MAX] = agregacja.maksymalna, [TGD_AVG] = agregacja.srednia from agregacja where [TGD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TLGG_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TGG_MIN] = agregacja.minimalna, [TGG_MAX] = agregacja.maksymalna, [TGG_AVG] = agregacja.srednia from agregacja where [TGG_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1U12.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [U12_MIN] = agregacja.minimalna, [U12_MAX] = agregacja.maksymalna, [U12_AVG] = agregacja.srednia from agregacja where [U12_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1U23.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [U23_MIN] = agregacja.minimalna, [U23_MAX] = agregacja.maksymalna, [U23_AVG] = agregacja.srednia from agregacja where [U23_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1U31.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [U31_MIN] = agregacja.minimalna, [U31_MAX] = agregacja.maksymalna, [U31_AVG] = agregacja.srednia from agregacja where [U31_AVG] is null;
+							
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1W.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [W_MIN] = agregacja.minimalna, [W_MAX] = agregacja.maksymalna, [W_AVG] = agregacja.srednia from agregacja where [W_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1F.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [F_MIN] = agregacja.minimalna, [F_MAX] = agregacja.maksymalna, [F_AVG] = agregacja.srednia from agregacja where [F_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1USLT_PRZEPLYW1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTQG_MIN] = agregacja.minimalna, [USLTQG_MAX] = agregacja.maksymalna, [USLTQG_AVG] = agregacja.srednia from agregacja where [USLTQG_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1USLT_PRZEPLYW2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTQD_MIN] = agregacja.minimalna, [USLTQD_MAX] = agregacja.maksymalna, [USLTQD_AVG] = agregacja.srednia from agregacja where [USLTQD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1USLT_CIS1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTPPF_MIN] = agregacja.minimalna, [USLTPPF_MAX] = agregacja.maksymalna, [USLTPPF_AVG] = agregacja.srednia from agregacja where [USLTPPF_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1USLT_CIS2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTPZF_MIN] = agregacja.minimalna, [USLTPZF_MAX] = agregacja.maksymalna, [USLTPZF_AVG] = agregacja.srednia from agregacja where [USLTPZF_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1USLT_ROZ_CIS.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTPDF_MIN] = agregacja.minimalna, [USLTPDF_MAX] = agregacja.maksymalna, [USLTPDF_AVG] = agregacja.srednia from agregacja where [USLTPDF_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1PRZEPLYW.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [PRZEPLYW_MIN] = agregacja.minimalna, [PRZEPLYW_MAX] = agregacja.maksymalna, [PRZEPLYW_AVG] = agregacja.srednia from agregacja where [PRZEPLYW_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TUZWST_DISP1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TL1_MIN] = agregacja.minimalna, [TL1_MAX] = agregacja.maksymalna, [TL1_AVG] = agregacja.srednia from agregacja where [TL1_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TUZWST_DISP2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TL2_MIN] = agregacja.minimalna, [TL2_MAX] = agregacja.maksymalna, [TL2_AVG] = agregacja.srednia from agregacja where [TL2_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TUZWST_DISP3.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TL3_MIN] = agregacja.minimalna, [TL3_MAX] = agregacja.maksymalna, [TL3_AVG] = agregacja.srednia from agregacja where [TL3_MIN] is null;
+								
+					set @HZ += 1;
+					end;
+
+				if @HZ = 2
+					begin
+						insert into CIMPLICITY.dbo.Tag_HZ (Timestamp, UnitID) values (GETDATE(), @hz);
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2COS.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [COS_MIN] = agregacja.minimalna, [COS_MAX] = agregacja.maksymalna, [COS_AVG] = agregacja.srednia from agregacja where [COS_MIN] is null;
+						
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2HKR.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [HKR_MIN] = agregacja.minimalna, [HKR_MAX] = agregacja.maksymalna, [HKR_AVG] = agregacja.srednia from agregacja where [HKR_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2I1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [I1_MIN] = agregacja.minimalna, [I1_MAX] = agregacja.maksymalna, [I1_AVG] = agregacja.srednia from agregacja where [I1_MIN] is null;		
+						
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2I2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [I2_MIN] = agregacja.minimalna, [I2_MAX] = agregacja.maksymalna, [I2_AVG] = agregacja.srednia from agregacja where [I2_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2I3.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [I3_MIN] = agregacja.minimalna, [I3_MAX] = agregacja.maksymalna, [I3_AVG] = agregacja.srednia from agregacja where [I3_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2K.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [K_MIN] = agregacja.minimalna, [K_MAX] = agregacja.maksymalna, [K_AVG] = agregacja.srednia from agregacja where [K_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2N.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [N_MIN] = agregacja.minimalna, [N_MAX] = agregacja.maksymalna, [N_AVG] = agregacja.srednia from agregacja where [N_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2P.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [P_MIN] = agregacja.minimalna, [P_MAX] = agregacja.maksymalna, [P_AVG] = agregacja.srednia from agregacja where [P_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2Q.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [Q_MIN] = agregacja.minimalna, [Q_MAX] = agregacja.maksymalna, [Q_AVG] = agregacja.srednia from agregacja where [Q_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2S.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [S_MIN] = agregacja.minimalna, [S_MAX] = agregacja.maksymalna, [S_AVG] = agregacja.srednia from agregacja where [S_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2SPAD.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [SPAD_MIN] = agregacja.minimalna, [SPAD_MAX] = agregacja.maksymalna, [SPAD_AVG] = agregacja.srednia from agregacja where [SPAD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TLNT2_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TLN_MIN] = agregacja.minimalna, [TLN_MAX] = agregacja.maksymalna, [TLN_AVG] = agregacja.srednia from agregacja where [TLN_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TLNT_OLEJ_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TOLN_MIN] = agregacja.minimalna, [TOLN_MAX] = agregacja.maksymalna, [TOLN_AVG] = agregacja.srednia from agregacja where [TOLN_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TLDT_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TTD_MIN] = agregacja.minimalna, [TTD_MAX] = agregacja.maksymalna, [TTD_AVG] = agregacja.srednia from agregacja where [TTD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TLGT_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TTG_MIN] = agregacja.minimalna, [TTG_MAX] = agregacja.maksymalna, [TTG_AVG] = agregacja.srednia from agregacja where [TTG_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TLDG_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TGD_MIN] = agregacja.minimalna, [TGD_MAX] = agregacja.maksymalna, [TGD_AVG] = agregacja.srednia from agregacja where [TGD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TLGG_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TGG_MIN] = agregacja.minimalna, [TGG_MAX] = agregacja.maksymalna, [TGG_AVG] = agregacja.srednia from agregacja where [TGG_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2U12.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [U12_MIN] = agregacja.minimalna, [U12_MAX] = agregacja.maksymalna, [U12_AVG] = agregacja.srednia from agregacja where [U12_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2U23.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [U23_MIN] = agregacja.minimalna, [U23_MAX] = agregacja.maksymalna, [U23_AVG] = agregacja.srednia from agregacja where [U23_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2U31.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [U31_MIN] = agregacja.minimalna, [U31_MAX] = agregacja.maksymalna, [U31_AVG] = agregacja.srednia from agregacja where [U31_AVG] is null;
+							
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2W.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [W_MIN] = agregacja.minimalna, [W_MAX] = agregacja.maksymalna, [W_AVG] = agregacja.srednia from agregacja where [W_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2F.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [F_MIN] = agregacja.minimalna, [F_MAX] = agregacja.maksymalna, [F_AVG] = agregacja.srednia from agregacja where [F_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2USLT_PRZEPLYW1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTQG_MIN] = agregacja.minimalna, [USLTQG_MAX] = agregacja.maksymalna, [USLTQG_AVG] = agregacja.srednia from agregacja where [USLTQG_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2USLT_PRZEPLYW2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTQD_MIN] = agregacja.minimalna, [USLTQD_MAX] = agregacja.maksymalna, [USLTQD_AVG] = agregacja.srednia from agregacja where [USLTQD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2USLT_CIS1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTPPF_MIN] = agregacja.minimalna, [USLTPPF_MAX] = agregacja.maksymalna, [USLTPPF_AVG] = agregacja.srednia from agregacja where [USLTPPF_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2USLT_CIS2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTPZF_MIN] = agregacja.minimalna, [USLTPZF_MAX] = agregacja.maksymalna, [USLTPZF_AVG] = agregacja.srednia from agregacja where [USLTPZF_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2USLT_ROZ_CIS.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [USLTPDF_MIN] = agregacja.minimalna, [USLTPDF_MAX] = agregacja.maksymalna, [USLTPDF_AVG] = agregacja.srednia from agregacja where [USLTPDF_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2PRZEPLYW.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [PRZEPLYW_MIN] = agregacja.minimalna, [PRZEPLYW_MAX] = agregacja.maksymalna, [PRZEPLYW_AVG] = agregacja.srednia from agregacja where [PRZEPLYW_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TUZWST_DISP1.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TL1_MIN] = agregacja.minimalna, [TL1_MAX] = agregacja.maksymalna, [TL1_AVG] = agregacja.srednia from agregacja where [TL1_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TUZWST_DISP2.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TL2_MIN] = agregacja.minimalna, [TL2_MAX] = agregacja.maksymalna, [TL2_AVG] = agregacja.srednia from agregacja where [TL2_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TUZWST_DISP3.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TL3_MIN] = agregacja.minimalna, [TL3_MAX] = agregacja.maksymalna, [TL3_AVG] = agregacja.srednia from agregacja where [TL3_MIN] is null;
+								
+					set @HZ += 1;
+					end;	
+				if @HZ = 3
+					begin
+						insert into CIMPLICITY.dbo.Tag_HZ (Timestamp, UnitID) values (GETDATE(), @hz);
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%NWG.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [WG_MIN] = agregacja.minimalna, [WG_MAX] = agregacja.maksymalna, [WG_AVG] = agregacja.srednia from agregacja where [WG_MIN] is null;
+						
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%NWGZAD.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [WGZAD_MIN] = agregacja.minimalna, [WGZAD_MAX] = agregacja.maksymalna, [WGZAD_AVG] = agregacja.srednia from agregacja where [WGZAD_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%NWD.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [WD_MIN] = agregacja.minimalna, [WD_MAX] = agregacja.maksymalna, [WD_AVG] = agregacja.srednia from agregacja where [WD_MIN] is null;		
+						
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%2TZEWN_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TZEWN_MIN] = agregacja.minimalna, [TZEWN_MAX] = agregacja.maksymalna, [TZEWN_AVG] = agregacja.srednia from agregacja where [TZEWN_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%1TWEWN_DISP.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [TWEWN_MIN] = agregacja.minimalna, [TWEWN_MAX] = agregacja.maksymalna, [TWEWN_AVG] = agregacja.srednia from agregacja where [TWEWN_MIN] is null;
+								
+						with agregacja as
+						(
+							select min(value) as minimalna,max(value) as maksymalna,avg(value) as srednia
+							from CIMPLICITY.dbo.HIST where Tagname like '%PRZEPSUM.value'
+						)
+						update CIMPLICITY.dbo.Tag_HZ set [PRZEPSUM_MIN] = agregacja.minimalna, [PRZEPSUM_MAX] = agregacja.maksymalna, [PRZEPSUM_AVG] = agregacja.srednia from agregacja where [PRZEPSUM_MIN] is null;
+
+					set @HZ = 1;
+					end;";
+
+
+		connection = new SqlConnection(connectionString);
+        try
+        {
+            connection.Open();
+            command = new SqlCommand(sql, connection);
+            dataReader = command.ExecuteReader();
+            dataReader.Close();
+            command.Dispose();
+            connection.Close();
+        }
+        catch (Exception ex)
+        {
+            CIMPLICITY.Trace("ERROR");
+        }
+		CIMPLICITY.Trace("Script End");
+	}
+}
